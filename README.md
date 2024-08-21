@@ -22,7 +22,7 @@
   - **Spring Validation**
   - **Spring Web**
   - **Spring Security**
-  - **Spring Cache** с очисткой кеша с помощью Scheduler
+  - Немного **Spring Cache** с очисткой кеша с помощью Scheduler
   - **RestTemplate** для взаимодействия с внешними API
 - **Git**
 - **Maven**
