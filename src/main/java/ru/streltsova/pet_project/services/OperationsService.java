@@ -23,9 +23,8 @@ public class OperationsService {
         this.operationsRepository = operationsRepository;
     }
 
-    public List<Operations> findAll() {
-        ClientDetails clientDetails = (ClientDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return operationsRepository.findAllByClientId(clientDetails.getClient().getId());
+    public List<Operations> findAll(Client client) {
+        return operationsRepository.findAllByClientId(client.getId());
     }
 
     public void saveOperation(Client client,

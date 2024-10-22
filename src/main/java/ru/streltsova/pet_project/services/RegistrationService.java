@@ -21,5 +21,7 @@ public class RegistrationService {
     public void register(Client client) {
         client.setPassword(passwordEncoder.encode(client.getPassword()));
         clientRepository.save(client);
+
     }
+
 }

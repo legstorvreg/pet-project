@@ -38,9 +38,7 @@ public class WalletService {
     }
 
     @Transactional
-    public void add(Wallet wallet) {
-        Client client = ((ClientDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getClient();
-
+    public void add(Client client, Wallet wallet) {
         Integer clientId = client.getId();
 
         if (!clientRepository.existsById(clientId)) {
@@ -55,8 +53,7 @@ public class WalletService {
     }
 
     @Transactional
-    public void buy(ConversionRequestDTO dto) {
-        Client client = ((ClientDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getClient();
+    public void buy(Client client, ConversionRequestDTO dto) {
         Integer clientId = client.getId();
 
         Optional<Wallet> walletFromOptional = walletRepository.findByClientIdAndCurrency(clientId, dto.getFrom());

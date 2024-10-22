@@ -4,12 +4,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.streltsova.pet_project.dto.ConversionRequestDTO;
 import ru.streltsova.pet_project.dto.ConversionResultDTO;
 import ru.streltsova.pet_project.dto.WalletDTO;
 import ru.streltsova.pet_project.enums.CurrencyEnum;
+import ru.streltsova.pet_project.models.Client;
 import ru.streltsova.pet_project.models.Wallet;
+import ru.streltsova.pet_project.security.ClientDetails;
 import ru.streltsova.pet_project.services.ConversionService;
 import ru.streltsova.pet_project.services.WalletService;
 
@@ -35,7 +38,9 @@ public class WalletController {
 
     @PostMapping("/addMoney")
     public ResponseEntity<HttpStatus> addMoney(@RequestBody @Valid WalletDTO dto) {
-        walletService.add(convertToWallet(dto));
+        Client client = ((ClientDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getClient();
+
+        walletService.add(client, convertToWallet(dto));
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -51,7 +56,9 @@ public class WalletController {
 
     @PostMapping("/buy")
     public ResponseEntity<HttpStatus> buyMoney(@RequestBody @Valid ConversionRequestDTO dto) {
-        walletService.buy(dto);
+        Client client = ((ClientDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getClient();
+
+        walletService.buy(client, dto);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }

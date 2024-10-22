@@ -2,11 +2,14 @@ package ru.streltsova.pet_project.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.streltsova.pet_project.dto.OperationsDTO;
+import ru.streltsova.pet_project.models.Client;
 import ru.streltsova.pet_project.models.Operations;
+import ru.streltsova.pet_project.security.ClientDetails;
 import ru.streltsova.pet_project.services.OperationsService;
 
 import java.util.List;
@@ -26,7 +29,8 @@ public class OperationsController {
 
     @GetMapping("/operations")
     public List<OperationsDTO> getOperations() {
-        return operationsService.findAll().stream()
+        Client client = ((ClientDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getClient();
+        return operationsService.findAll(client).stream()
                 .map(this::convertToOperationsDTO)
                 .toList();
     }
