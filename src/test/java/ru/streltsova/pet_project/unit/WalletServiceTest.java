@@ -1,18 +1,14 @@
-package ru.streltsova.pet_project;
+package ru.streltsova.pet_project.unit;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.streltsova.pet_project.dto.ConversionRequestDTO;
 import ru.streltsova.pet_project.dto.ConversionResultDTO;
 import ru.streltsova.pet_project.enums.CurrencyEnum;
 import ru.streltsova.pet_project.exceptions.ClientNotFoundException;
 import ru.streltsova.pet_project.exceptions.CurrencyNotFoundException;
-import ru.streltsova.pet_project.models.Client;
 import ru.streltsova.pet_project.models.Wallet;
 import ru.streltsova.pet_project.repositories.ClientRepository;
 import ru.streltsova.pet_project.repositories.WalletRepository;
@@ -23,11 +19,12 @@ import ru.streltsova.pet_project.services.WalletService;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class WalletServiceTest2 {
+class WalletServiceTest extends BaseUnitTest {
 
     @Mock
     private WalletRepository walletRepository;
@@ -40,27 +37,6 @@ class WalletServiceTest2 {
 
     @InjectMocks
     private WalletService walletService;
-
-
-    private Client client;
-    private Wallet wallet;
-    private ConversionRequestDTO dto;
-
-
-    WalletServiceTest2() {
-    }
-
-
-    @BeforeEach
-    void setup() {
-        client = new Client();
-        client.setId(1);
-        wallet = new Wallet();
-        dto=new ConversionRequestDTO();
-        dto.setFrom(CurrencyEnum.USD);
-        dto.setTo(CurrencyEnum.EUR);
-        dto.setAmount(new BigDecimal("100"));
-    }
 
     @Test
     void test() {
@@ -79,24 +55,23 @@ class WalletServiceTest2 {
         assertThrows(ClientNotFoundException.class, () -> walletService.add(client, wallet));
     }
 
-
     @Test
-    void buy_posotiveCaseWhenClienAndWalletIsExist(){
-        Wallet walletFrom=new Wallet(client,new BigDecimal("200"),CurrencyEnum.USD);
-        Wallet walletTo=new Wallet(client,new BigDecimal("50"),CurrencyEnum.EUR);
-
-        when(walletRepository.findByClientIdAndCurrency(client.getId(),CurrencyEnum.USD))
-                .thenReturn(Optional.of(walletFrom));
-        when(walletRepository.findByClientIdAndCurrency(client.getId(),CurrencyEnum.EUR))
-                .thenReturn(Optional.of(walletTo));
+    void buy_positiveCaseWhenClientAndWalletExists() {
+        Wallet walletFrom = new Wallet(client, new BigDecimal("200"), CurrencyEnum.USD);
+        Wallet walletTo = new Wallet(client, new BigDecimal("50"), CurrencyEnum.EUR);
 
         ConversionResultDTO conversionResult = new ConversionResultDTO();
         conversionResult.setConversionAmount(new BigDecimal("80"));
         conversionResult.setOriginalAmount(dto.getAmount());
+
+        when(walletRepository.findByClientIdAndCurrency(client.getId(), CurrencyEnum.USD))
+                .thenReturn(Optional.of(walletFrom));
+        when(walletRepository.findByClientIdAndCurrency(client.getId(), CurrencyEnum.EUR))
+                .thenReturn(Optional.of(walletTo));
         when(conversionService.doConversion(CurrencyEnum.USD, CurrencyEnum.EUR, dto.getAmount()))
                 .thenReturn(conversionResult);
 
-        walletService.buy(client,dto);
+        walletService.buy(client, dto);
 
         assertEquals(new BigDecimal("100"), walletFrom.getAmount());
         assertEquals(new BigDecimal("130"), walletTo.getAmount());
@@ -111,7 +86,7 @@ class WalletServiceTest2 {
     }
 
     @Test
-    void buy_shouldThrowCurrencyNotFoundException(){
+    void buy_shouldThrowCurrencyNotFoundException() {
         when(walletRepository.findByClientIdAndCurrency(client.getId(), CurrencyEnum.USD))
                 .thenReturn(Optional.empty());
 
@@ -126,8 +101,8 @@ class WalletServiceTest2 {
     }
 
     @Test
-    void buy_shouldThrowIllegalStateException(){
-        Wallet walletFrom=new Wallet(client,new BigDecimal("50"),CurrencyEnum.USD);
+    void buy_shouldThrowIllegalStateException() {
+        Wallet walletFrom = new Wallet(client, new BigDecimal("50"), CurrencyEnum.USD);
 
         when(walletRepository.findByClientIdAndCurrency(client.getId(), CurrencyEnum.USD))
                 .thenReturn(Optional.of(walletFrom));
@@ -143,8 +118,8 @@ class WalletServiceTest2 {
     }
 
     @Test
-    void buy_createNewWalletIfIsDoesntExist(){
-        Wallet walletFrom=new Wallet(client,new BigDecimal("200"),CurrencyEnum.USD);
+    void buy_createNewWalletIfIsDoesntExist() {
+        Wallet walletFrom = new Wallet(client, new BigDecimal("200"), CurrencyEnum.USD);
 
         when(walletRepository.findByClientIdAndCurrency(client.getId(), CurrencyEnum.USD))
                 .thenReturn(Optional.of(walletFrom));
@@ -169,9 +144,5 @@ class WalletServiceTest2 {
                 eq(conversionResult.getOriginalAmount())
         );
     }
-
-
-
-
-    }
+}
 

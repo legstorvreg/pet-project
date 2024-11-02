@@ -1,13 +1,11 @@
 package ru.streltsova.pet_project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.streltsova.pet_project.enums.CurrencyEnum;
 import ru.streltsova.pet_project.models.Client;
 import ru.streltsova.pet_project.models.Operations;
 import ru.streltsova.pet_project.repositories.OperationsRepository;
-import ru.streltsova.pet_project.security.ClientDetails;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

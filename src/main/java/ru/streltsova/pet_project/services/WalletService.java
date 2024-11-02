@@ -1,7 +1,6 @@
 package ru.streltsova.pet_project.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.streltsova.pet_project.dto.ConversionRequestDTO;
@@ -13,7 +12,6 @@ import ru.streltsova.pet_project.models.Client;
 import ru.streltsova.pet_project.models.Wallet;
 import ru.streltsova.pet_project.repositories.ClientRepository;
 import ru.streltsova.pet_project.repositories.WalletRepository;
-import ru.streltsova.pet_project.security.ClientDetails;
 
 import java.math.BigDecimal;
 import java.util.Optional;

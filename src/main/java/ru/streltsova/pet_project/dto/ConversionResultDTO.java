@@ -51,4 +51,6 @@ public class ConversionResultDTO {
     public void setCurrencyRate(BigDecimal currencyRate) {
         this.currencyRate = currencyRate;
     }
+
+
 }
